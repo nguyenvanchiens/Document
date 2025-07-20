@@ -1,0 +1,2 @@
+D:\container\template\Document Page\Document\Document.Web\build\emcc-props.json
+D:\container\template\Document Page\Document\Document.Web\build\web.config

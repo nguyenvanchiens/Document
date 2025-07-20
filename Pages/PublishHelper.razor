@@ -1,0 +1,205 @@
+﻿@page "/PublishHelper"
+@inject IJSRuntime JS
+@inherits BaseComponent
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header"><h2>Publish Website</h2></div>
+                <div class="content">
+                    <div class="content-item">
+                        <span class="content-title">🌟 Hướng dẫn Publish & Triển khai API ASP.NET Core lên MonsterASP (dùng cho Blazor hoặc API)</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="language-text">
+🔷 Bước 1: Tạo dự án
+- Mở Visual Studio hoặc Visual Studio Code.
+- Tạo một project mới:
+    + Chọn ASP.NET Core Web Application
+    + Chọn template: Web API hoặc Web Application (Razor Pages) tùy nhu cầu.
+    + Đặt tên và chọn thư mục lưu trữ.
+
+🔷 Bước 2: Phát triển API
+- Cài đặt các package, middleware, controller, service … như bình thường.
+- Kiểm tra app chạy ổn định ở localhost trước khi publish.
+- Chạy thử bằng F5 hoặc dotnet run để đảm bảo API trả về kết quả đúng.
+
+🔷 Bước 3: Publish dự án
+- Mở project trong Visual Studio.
+- Chuột phải vào project → chọn Publish.
+- Trong cửa sổ Publish:
+    + Chọn Folder làm đích đến.
+    + Chọn hoặc tạo một profile publish mới.
+    + Chọn thư mục (ví dụ: C:\MyProject\publish) để lưu các file đã publish
+    + Nhấn Publish.
+- Sau khi publish hoàn tất, bạn sẽ thấy một thư mục chứa đầy đủ file .dll, .json, web.config, 
+wwwroot, … sẵn sàng để triển khai.
+
+🔷 Bước 4: Chuẩn bị upload
+- Truy cập thư mục publish.
+- Chọn toàn bộ file và thư mục bên trong, nén chúng lại thành 1 file .zip (không nén cả thư mục cha, chỉ nén nội dung).
+
+🔷 Bước 5: Tạo website trên MonsterASP
+- Truy cập trang quản lý: https://admin.monsterasp.net/
+- Đăng nhập tài khoản.
+- Vào menu Files.
+- Chọn Create new service.
+- Chọn Create website
+- Chọn gói hosting (nếu dùng thử → chọn bản miễn phí).
+- Điền tên website và các thông tin cần thiết.
+- Khi hoàn tất, website sẽ được tạo thành công và hiển thị trong danh sách.
+
+🔷 Bước 6: Upload & triển khai
+- Cách 1: Thủ công
+    + Trong phần quản lý file của website (Files → wwwroot của site vừa tạo):
+        + Trong thư mục publish của bạn, chọn toàn bộ file & thư mục → nén thành .zip
+        + Upload file .zip đó lên wwwroot của website.
+        + Sau khi upload xong, click chuột phải vào file .zip và chọn Extract
+        + Đảm bảo các file được giải nén ra đúng trong thư mục gốc (wwwroot) của website
+        + Truy cập website để kiểm tra kết quả
+
+- Cách 2: Dùng cấu hình FTP
+    + MonsterASP hỗ trợ bạn tải sẵn một file cấu hình FTP publish để lần sau chỉ cần bấm Publish là xong, không cần zip & upload thủ công nữa.
+        + Truy cập: https://admin.monsterasp.net/app/site/site/deploy?site=site31203 (hoặc theo link Deploy của site bạn trong Admin MonsterASP)
+        + Tải về file cấu hình (thường là .PublishSettings)
+        + Trong Visual Studio:
+            + Chuột phải vào project → Publish…
+            + Thay vì chọn Folder, chọn: Import Profile…
+            + Chọn file .PublishSettings bạn vừa tải về
+        + Lần sau bạn chỉ cần bấm Publish → Visual Studio sẽ tự upload thẳng lên server qua FTP
+
+🔷 Bước 7: Kiểm tra
+- Truy cập đường dẫn của website bạn vừa tạo.
+- Nếu mọi thứ đúng, website hoặc API của bạn sẽ chạy
+- Kiểm tra bằng cách gọi các endpoint API hoặc truy cập trang chủ
+        </code>
+    </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">🌟 Deploy Blazor WebAssembly lên Cloudflare Pages</span>
+                        <div class="content-body" style="color:black">
+                            <pre>
+                            <code class="language-text">
+📌 Phần 1: Deploy Blazor WebAssembly lên Cloudflare Pages
+
+🔷 Bước 1: Tạo & build dự án Blazor
++ Mở visual studiocode lên vào tạo dứ án webassembly standalone app do mình không có cấu hình api ở đây chỉ là giao diện thôi
+
+🔷 Bước 2: Build dự án
++ Khi tạo dự án muốn build luôn thì ta sẽ đúng ở folder chứa wwwroot chạy lệnh "dotnet publish -c Release -o build"
+    + Sau khi chạy xong, bạn sẽ thấy thư mục build/wwwroot/ chứa toàn bộ file tĩnh (index.html, .dll, .js, .css …).
+
+🔷 Bước 3: Deploy lên Cloudflare Pages
++ Truy cập:  https://dash.cloudflare.com/ -> đăng nhập
++ Vào Workers & Pages → chọn tab Pages -> Direct Upload
++ Đặt tên cho project → hệ thống sẽ tự tạo cho bạn một domain tạm kiểu:
++ Upload nội dung:
+    + Nhấn Upload folder
+    + Chọn tất cả nội dung bên trong build/wwwroot/ (Lưu ý: chỉ chọn nội dung, không chọn cả thư mục wwwroot)
++ Nhấn Deploy site.
+    + Khi deploy xong, truy cập domain tạm để kiểm tra.
+
+📌 Phần 2: Trỏ domain riêng về Cloudflare Pages
+
++ Sau khi domain đã “Active” trong Cloudflare, quay lại dashboard.
++ Vào project Pages của bạn → chọn tab Custom domains → nhấn Set up a custom domain.
++ Nhập tên domain của bạn → xác nhận.
++ Khi domain hiện trạng thái Active → xong.
+
+📋 Tóm tắt nhanh:
+✅ Tạo & build Blazor WebAssembly:
+dotnet publish -c Release -o build
+
+✅ Upload nội dung build/wwwroot/ lên Cloudflare Pages → deploy.
+
+✅ Thêm domain của bạn vào Cloudflare → trỏ nameservers.
+
+✅ Gắn domain vào dự án Pages → Active → chạy.
+        </code>
+    </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">🌟 Hướng dẫn trỏ GitHub Pages về domain của bạn</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="language-text">
+📌 Phần 1: Cấu hình GitHub Pages & CNAME
+
+🔷 Bước 1: Đẩy source code lên GitHub
++ Tạo repository trên GitHub (public hoặc private).
++ Push source code lên GitHub như bình thường.
+
+🔷 Bước 2: Bật GitHub Pages
++ Truy cập repository của bạn → vào tab Settings.
++ Trong sidebar chọn Pages (hoặc Pages mục con trong Code and automation)
++ Trong phần “Build and deployment”:
+    + Source: chọn Deploy from a branch
+    + Branch: chọn main hoặc gh-pages, folder / (root) hoặc /docs tuỳ cấu trúc repo
++ GitHub sẽ sinh ra domain tạm cho bạn: (your-username.github.io hoặc your-project.github.io)
+
+🔷 Bước 3: Thêm file CNAME
++ Trong thư mục gốc của repo (cùng cấp với index.html), tạo một file tên là: CNAME
++ Bên trong file, dán domain riêng của bạn, ví dụ: chien.io.vn
++ Commit và push lại file này lên GitHub. (Khi đó, GitHub Pages sẽ tự hiểu rằng bạn muốn dùng domain riêng.)
+
+📌 Phần 2: Trỏ domain về GitHub Pages
+🔷 Bước 4: Truy cập quản lý domain
++ Ví dụ bạn dùng ZoneDNS: 👉 https://zonedns.vn/
++ Đăng nhập → vào mục Quản lý domain → chọn domain bạn muốn cấu hình.
+
+🔷 Bước 5: Đổi DNS nếu cần
++ Nếu domain của bạn đang dùng DNS của nhà cung cấp khác (vd: GoDaddy, Tenten...), bạn có thể:
+    + Giữ nguyên nếu đang dùng DNS của họ.
+    + Hoặc đổi sang DNS của Cloudflare/ZoneDNS nếu bạn muốn toàn quyền chỉnh DNS.
+
+🔷 Bước 6: Thêm các bản ghi (record)
++ Bản ghi A (trỏ domain gốc, không www)
+| Type | Name           | Value             |
+| ---- | -------------- | ----------------- |
+| A    | `acong (không viết được chữ kia)` | `185.199.108.153` |
+| A    | `acong`(không viết được chữ kia)` | `185.199.109.153` |
+| A    | `acong`(không viết được chữ kia)` | `185.199.110.153` |
+| A    | `acong`(không viết được chữ kia)` | `185.199.111.153` |
+
++ Tại sao cần 4 bản ghi A?
+    + GitHub Pages phân phối nội dung qua nhiều địa chỉ IP khác nhau để:
+        + Tăng khả năng chịu tải
+        + Giảm nguy cơ downtime (redundancy) → Bạn có thể dùng 1, nhưng nên dùng đủ 4.
+
++ Bản ghi CNAME (trỏ www)
+| Type  | Name | Value                     |
+| ----- | ---- | ------------------------- |
+| CNAME | www  | `your-username.github.io` |
+
+📌 Ghi chú:
++ Tên CNAME: www (nghĩa là www.acong.vn)
++ Nội dung: domain GitHub Pages tạm của bạn
+→ GitHub dùng để redirect www về đúng repo.
+
+🔷 Bước 7: Kiểm tra & hoàn tất
++ Sau khi cấu hình xong:
+    + Đợi DNS cập nhật (5–30 phút).
+    + Truy cập thử domain bạn vừa cấu hình.
+    + Nếu hiển thị site GitHub Pages → đã thành công.
+
+💡 Nếu www.acong.vn chạy mà acong.vn không chạy (hoặc ngược lại), bạn có thể bật redirect bên DNS provider, hoặc cấu hình thêm bản ghi CNAME/A
+        </code>
+    </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("hljs.highlightAll");
+        }
+    }
+}

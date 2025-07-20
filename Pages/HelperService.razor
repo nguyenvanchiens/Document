@@ -1,0 +1,100 @@
+﻿@page "/HeplerServer"
+@inherits BaseComponent
+@inject IJSRuntime JS
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header"><h2>Những thứ liên quan đến server</h2></div>
+                <div class="content">
+                    <div class="content-item">
+                        <span class="content-title">Các hàm tiện ích</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+    TimeZoneHelper (dùng để định dạng giờ theo múi giờ)
+    RandomHelper.GetRandomAlphNums() — hàm random ký
+    Để lấy về token có userName:
+    var opts = ServiceHelper.GetSessionApiClientOptions(context, "account-api-v4");
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Lấy phần core exception:</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+   private readonly CoreExceptionApiClient _clientCoreException;
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Cách viết query kết hợp:</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+  var predicateBuilder = new PredicateBuilder 'PickupAndDeliveryLocationEntity>();
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Lấy về tên dựa theo mã của nhân viên:</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+  private readonly StaffSystemApiClient _clientStaff;
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Convert datetime (C#):</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+ .ToVNTime
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Cách thêm config ở API:</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+http://admin.hopnhat.local/FlCore/ConfigurationGroups → chọn staging
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Mật khẩu xem log online: Hj8aB45m</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+
+  https://admin.monsterasp.net/app/customer/settings/password
+
+  chien1642000@gmail.com
+  Develop1@@@@@@@@
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("hljs.highlightAll");
+        }
+    }
+}

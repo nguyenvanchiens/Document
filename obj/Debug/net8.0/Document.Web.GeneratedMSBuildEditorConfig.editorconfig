@@ -1,0 +1,77 @@
+is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = false
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = browser
+build_property.RootNamespace = Document.Web
+build_property.RootNamespace = Document.Web
+build_property.ProjectDir = D:\container\template\Document Page\Document\Document.Web\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\container\template\Document Page\Document\Document.Web
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/container/template/Document Page/Document/Document.Web/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Layout/AdminLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XEFkbWluTGF5b3V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/BlazorImportant.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9ySW1wb3J0YW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/DevextremeHelper.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGV2ZXh0cmVtZUhlbHBlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/GenCodeV3.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcR2VuQ29kZVYzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/HelperService.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSGVscGVyU2VydmljZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/Home.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/PublishHelper.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGlzaEhlbHBlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Pages/RedirectToLogin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVkaXJlY3RUb0xvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/container/template/Document Page/Document/Document.Web/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-68m1uiysh1
+
+[D:/container/template/Document Page/Document/Document.Web/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ugkyw4q5zc

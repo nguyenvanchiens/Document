@@ -1,0 +1,222 @@
+﻿@page "/DevextremeHelper"
+@inject IJSRuntime JS
+@inherits BaseComponent
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header"><h2>Những thứ liên quan đến devextreme helper</h2></div>
+                <div class="content">
+                   <div class="content-item">
+                        <span class="content-title">Cách để convert list string lookup nhưng list trả về là number</span>
+                       <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+     columns.addColumn('SexType', LanguageKey.AccountUser.Table.SexType)
+     .width(150)
+     .alignment('center')
+     .lookup(l => {
+         l.dataSource(this.formData.ListSexType.map(item => ({
+             value: Number(item.value),
+             text: item.text
+         })));
+         l.valueExpr("value");
+         l.displayExpr("text");
+     });
+ </code>
+                        </pre>
+                       </div>
+                   </div>
+                   <div class="content-item">
+                        <span class="content-title">Cách để tạo ra form popup nhanh:</span>
+                        <div class="content-body">
+                            <pre><code class="typescript">
+public readonly POPUP_UPDATE_VIETTELPOST_PROVINCE = "POPUP_UPDATE_VIETTELPOST_PROVINCE";
+public readonly FORM_UPDATEPROVICE = "Form_Update_Province";
+public $popupUpdateViettelPostProvince: PopupBuilder;
+
+constructor() {
+    var div = document.createElement("div");
+    div.id = this.POPUP_UPDATE_VIETTELPOST_PROVINCE;
+    document.body.appendChild(div);
+
+    this.$popupUpdateViettelPostProvince =
+        new PopupBuilder(this.POPUP_UPDATE_VIETTELPOST_PROVINCE);
+}
+
+private async showPopupUpdateProvice(e: DevExpress.ui.dxButton.ClickEvent) {
+    this.$popupUpdateViettelPostProvince.createPopup(option => {
+        option.title("Cập nhật viettel post theo tỉnh")
+            .id("popupImportExcel")
+            .width("30%")
+            .height("45%")
+            .visible(false)
+            .showCloseButton(true)
+            .hideOnOutsideClick(false)
+            .onHiding(e => this.hideUpdateProvice())
+            .contentTemplate(contentElement => {
+                var builderForm = this.createFormUpdateProvice();
+                contentElement.dxForm(builderForm.build());
+            })
+            .toolbarItems(x => {
+                x.add().toolbar("bottom").location("after").widget("dxButton").options({
+                    text: "Lưu",
+                    useSubmitBehavior: true,
+                    type: 'success',
+                    onClick: () => this.submitUpdateProvice()
+                });
+                x.add().toolbar("bottom").location("after").widget("dxButton").options({
+                    text: Utils.l(LanguageKey.Form.ButtonClose),
+                    onClick: () => this.hideUpdateProvice()
+                });
+            });
+    });
+    this.showUpdateProvice();
+}
+
+private createFormUpdateProvice(): FormOptionBuilder 'ViettelPostSyncDataRequest' {
+    var builder = new FormOptionBuilder 'ViettelPostSyncDataRequest';
+    builder.id(this.FORM_UPDATEPROVICE)
+        .labelLocation("left")
+        .items(item => {
+            item.addSimpleFor('ProvinceId', Utils.l(LanguageKey.ViettelPostMapping.Table.Province))
+                .editor(e => e.createSelectBox('province', this.formData.ProvinceViettelPost, this.formData.ProvinceId)).isRequired(true);
+        })
+    return builder;
+}
+
+public showUpdateProvice(): void {
+    this.$popupUpdateViettelPostProvince.build().show();
+}
+
+public hideUpdateProvice(): void {
+    this.$popupUpdateViettelPostProvince.build().dispose();
+}
+        </code></pre>
+                        </div>
+                    </div>
+                   <div class="content-item">
+                        <span class="content-title">Xây dựng popup grid nhanh:</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+    public readonly POPUP_CAR_HISTORY = "popup_car_history";
+public $popup: PopupBuilder;
+
+constructor(container: JQuery, formData: any, options: CarRepairProcessCarViewPageModel) {
+    super(container, formData, options);
+
+    var div = document.createElement("div");
+    div.id = this.POPUP_CAR_HISTORY;
+    document.body.appendChild(div);
+    this.$popup = new PopupBuilder(this.POPUP_CAR_HISTORY);
+}
+
+private showHistoryCar(e: DevExpress.ui.dxDataGrid.ColumnButtonClickEvent) {
+    var dataId = e.row.data.Id;
+    this.$popup.createPopup(option => {
+        option.title(Utils.l(LanguageKey.CarRepairProcessCar.Popup.TitleHistory))
+            .id(this.POPUP_CAR_HISTORY)
+            .width("80%")
+            .height("80%")
+            .visible(false)
+            .showCloseButton(true)
+            .onHiding(e => this.hidePopupCarHistory())
+            .contentTemplate(contentElement => {
+                var grid = this.loadGridCarHistory(dataId);
+                contentElement.dxDataGrid(grid.build());
+            });
+    });
+    this.showPopupCarHistory();
+}
+private loadGridCarHistory(dataId: string) {
+    var gridHistory = new DataGridOptionBuilder 'CarRepairProcessCarLogViewModel>();
+    gridHistory.height('70vh').id("girdCarHistory").showBorders(true).height("100%").scrolling({ mode: "standard" })
+        .rowAlternationEnabled(true)
+        .columns(columns => {
+            columns.addColumn('RegionCode', LanguageKey.CarRepairProcessCar.Table.RegionCode).width(80).lookup(x => x.dataSource(this.options.ListMien));
+            columns.addColumn('PartitiveCode', LanguageKey.CarRepairProcessCar.Table.PartitiveCode).width(150).lookup(x => x.dataSource(this.options.ListBoPhan));
+            columns.addColumn('StaffCode', LanguageKey.CarRepairProcessCar.Table.StaffCode).width(200).lookup(x => x.dataSource(this.options.ListStaffLaiXe));
+            columns.addColumn('StaffAssistantCode', LanguageKey.CarRepairProcessCar.Table.StaffAssistantCode).width(200).lookup(x => x.dataSource(this.options.ListStaffLaiXe));
+            columns.addColumn('StaffAssistantDriverStartTime', LanguageKey.CarRepairProcessCar.Table.StaffAssistantDriverStartTime).width(150).cellTemplate((cellElement, cellInfo) => this.renderDateTime(cellElement, cellInfo)).alignment('center');
+            columns.addColumn('LicensePlate', LanguageKey.CarRepairProcessCar.Table.LicensePlate).width(150);
+            columns.addColumn('NewLicensePlate', LanguageKey.CarRepairProcessCar.Table.NewLicensePlate).width(150);
+            columns.addColumn('BrandCode', LanguageKey.CarRepairProcessCar.Table.BrandCode).width(150).lookup(x => x.dataSource(this.options.ListHangXe));
+            columns.addColumn('ModelCode', LanguageKey.CarRepairProcessCar.Table.ModelCode).width(150).lookup(x => x.dataSource(this.options.ListMauXe));
+            columns.addColumn('Category', LanguageKey.CarRepairProcessCar.Table.Category).width(150).lookup(x => x.dataSource(this.options.ListPhanLoai));
+            columns.addColumn('YearOfManufacture', LanguageKey.CarRepairProcessCar.Table.YearOfManufacture).width(120);
+            columns.addColumn('CarType', LanguageKey.CarRepairProcessCar.Table.CarType).width(150).lookup(x => x.dataSource(this.options.ListLoaiXe));
+            columns.addColumn('Payload', LanguageKey.CarRepairProcessCar.Table.Payload).width(150);
+            columns.addColumn('ChassisNumber', LanguageKey.CarRepairProcessCar.Table.ChassisNumber).width(150);
+            columns.addColumn('EngineNumber', LanguageKey.CarRepairProcessCar.Table.EngineNumber).width(150);
+            columns.addColumn('StartDate', LanguageKey.CarRepairProcessCar.Table.StartDate).width(150).formatDateTime("yyyy-MM-dd").alignment('center');
+            columns.addColumn('Status', LanguageKey.CarRepairProcessCar.Table.Status).width(150).lookup(x => x.dataSource(this.LIST_STATUS).displayExpr("name").valueExpr("code"));
+            columns.addColumn('Note', LanguageKey.CarRepairProcessCar.Table.Note).width(150);
+            columns.addColumn('LogType', LanguageKey.CarRepairProcessCar.Table.LogType).width(150);
+            columns.addColumn('LogUser', LanguageKey.CarRepairProcessCar.Table.CreatedUser).width(150);
+            columns.addColumn('LogTime', LanguageKey.CarRepairProcessCar.Table.CreatedTimeLog).width(200).alignment('center').formatDateTime("yyyy-MM-dd HH:mm:ss").sortOrder('asc');
+        })
+        .dataSource(option => {
+            option.addMvc('CarRepairProcessCar', 'GetDataHistory', this.getCarHistoryLoadParams(dataId), 'POST');
+        });
+    return gridHistory;
+}
+
+private getCarHistoryLoadParams(carId) {
+    return {
+        CarId: () => { return carId },
+    }
+}
+
+public showPopupCarHistory(): void {
+    this.$popup.build().show();
+}
+
+public hidePopupCarHistory(): void {
+    this.$popup.build().dispose();
+}
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Cách xoá datetime null</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="javascript">
+    private renderDateTime(cellElement, cellInfo) {
+    var dateVal = Utils.formatDateTime(cellInfo.value, "YYYY-MM-DD");
+    if (!dateVal || dateVal === "0001-01-01T00:00:00Z" || dateVal === "0001-01-01") {
+        cellElement.empty();
+    } else {
+        cellElement.append(Utils.formatDateTime(cellInfo.value, "YYYY-MM-DD"));
+    }
+}
+
+Khi thêm ở giao diện thì ta phải thêm cả trên form ở phần onContentReadyForm
+
+ var datePickUpDate = $("#PickupDateForm").dxDateBox("instance");
+ var datePickUpDateValue = datePickUpDate.option('value')
+ if (datePickUpDateValue == "0001-01-01T00:00:00Z" || datePickUpDateValue == "0001-01-01") {
+     datePickUpDate.option('value', "")
+ }
+ </code>
+                        </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("hljs.highlightAll");
+        }
+    }
+}
