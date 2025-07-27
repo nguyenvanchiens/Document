@@ -52,12 +52,12 @@
         {
             builder.OpenComponent(0, typeof(RouteView));
             builder.AddAttribute(1, "RouteData", RouteData);
-            builder.AddAttribute(2, "DefaultLayout", DefaultLayout); // giữ layout
+            builder.AddAttribute(2, "DefaultLayout", DefaultLayout);
             builder.CloseComponent();
         }
         else
         {
-            builder.OpenComponent(3, typeof(RedirectToLogin));
+            Navigation?.NavigateTo("/unauthorized", forceLoad: true);
             builder.CloseComponent();
         }
     };
