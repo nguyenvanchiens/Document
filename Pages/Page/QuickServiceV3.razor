@@ -1,0 +1,153 @@
+﻿@namespace Document.Web.Pages
+@GenData()
+@code {
+    [Parameter] public string ClassName { get; set; }
+    [Parameter] public string GroupName { get; set; }
+
+    public string GenData()
+    {
+        var rawCode = $@"
+namespace FastLink.V3.{GroupName}.Services
+{{
+        public class {ClassName}Service : BaseService
+        {{
+            private readonly {ClassName}Repository _repo;
+
+            public {ClassName}Service(IWorkingContext context) : base(context)
+            {{
+                _repo = new {ClassName}Repository(options: null, context: Context);
+            }}
+
+            public async Task<Result<List<{ClassName}Model>>> GetAllAsync()
+            {{
+                try
+                {{
+                    var entities = await _repo.FindAllAsync();
+                    var models = entities.MapToList<{ClassName}Model>();
+                    return Result.Ok(models);;
+                }}
+                catch (Exception ex)
+                {{
+                     msg = $""Unhandled exception: {{nameof(GetAllAsync)}}"";
+                    Logger.Error(LogSection, ex, errorMessage);
+                    return Result.Exception<List<{ClassName}Model>>(errorMessage, ex);
+                }}
+            }}
+
+            public async Task<Result<{ClassName}Model>> GetByIdAsync(string key)
+            {{
+                string msg = """";
+                try
+                {{
+                    var entity = await _repo.FirstOrDefaultAsync(x => x.Id == key);
+                    if (entity == null)
+                    {{
+                        msg = $""Không tìm thấy bản ghi nào có id [{{key}}]"";
+                        Logger.Debug(LogSection, msg);
+                        return Result.Error<{ClassName}Model>(Result.DATA_NOT_EXISTED.Code, msg);
+                    }}
+                    var model = entity.MapTo<{ClassName}Model>();
+                    return Result.Ok(model);
+                }}
+                catch (Exception ex)
+                {{
+                    msg = $""Unhandled exception: {{nameof(GetByIdAsync)}}"";
+                    Logger.Error(LogSection, ex, msg);
+                    return Result.Exception<{ClassName}Model>(msg, ex);
+                }}
+            }}
+
+            public async Task<Result> InsertAsync(string jsonValues)
+            {{
+                string msg;
+                bool b;
+                try
+                {{
+                    var model = JsonHelper.Parse<{ClassName}Model>(jsonValues);
+                    var entity = model.MapTo<{ClassName}Entity>();
+                    entity.Id = IdHelper.NewId();
+                    b = await _repo.InsertAsync(entity);
+                    if (!b)
+                    {{
+                        msg = $""Lỗi thêm bản ghi không thành công"";
+                        Logger.Debug(LogSection, msg);
+                        return Result.Error(Result.DATA_CANNOT_CREATE.Code, msg);
+                    }}
+
+                    return Result.Ok();
+                }}
+                catch (Exception ex)
+                {{
+                   msg = $""Unhandled exception: {{nameof(InsertAsync)}}"";
+                    Logger.Error(LogSection, ex, msg);
+                    return Result.Exception(msg, ex);
+                }}
+            }}
+
+            public async Task<Result> UpdateAsync(string id, string patchJsonValues)
+            {{
+                string msg;
+                bool b;
+                try
+                {{
+                    var entity = await _repo.GetAsync(id);
+                    if (entity == null)
+                    {{
+                        msg = $""Không tìm thấy node id [{{id}}]"";
+                        Logger.Debug(LogSection, msg);
+                        return Result.Error(Result.DATA_NOT_EXISTED.Code, msg);
+                    }}
+
+                    JsonConvert.PopulateObject(patchJsonValues, entity);
+
+                    b = await _repo.UpdateAsync(entity);
+                    if (!b)
+                    {{
+                        msg = $""Cập nhật bản ghi không thành công"";
+                        Logger.Debug(LogSection, msg);
+                        return Result.Error(Result.DATA_CANNOT_UPDATE.Code, msg);
+                    }}
+
+                    return Result.Ok();
+                }}
+                catch (Exception ex)
+                {{
+                   msg = $""Unhandled exception: {{nameof(UpdateAsync)}}"";
+                    Logger.Error(LogSection, ex, msg);
+                    return Result.Exception(msg, ex);
+                }}
+            }}
+
+            public async Task<Result> DeleteAsync(string id)
+            {{
+                var b = id.IsEmpty() || id.Length <= 3;
+                if (b)
+                {{
+                    var mes = ""Dữ liệu không hợp lệ để xóa"";
+                    Logger.Debug(LogSection, mes);
+                    return Result.Error(Result.DATA_INVALID.Code, mes);
+                }}
+                try
+                {{
+                    b = await _repo.DeleteWhereAsync(x => x.Id == id);
+                    if (!b)
+                    {{
+                        var msg = $""Xoá bản ghi không thành công"";
+                        Logger.Debug(LogSection, msg);
+                        return Result.Error(Result.DATA_CANNOT_DELETE.Code, msg);
+                    }}
+                    return Result.Ok();
+                }}
+                catch (Exception ex)
+                {{
+                    msg = $""Unhandled exception: {{nameof(DeleteAsync)}}"";
+                    Logger.Error(LogSection, ex, msg);
+                    return Result.Exception(msg, ex);
+                }}
+            }}
+        }}
+}}";
+        return rawCode;
+    }
+
+}

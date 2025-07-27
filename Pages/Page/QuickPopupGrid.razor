@@ -1,0 +1,73 @@
+﻿@namespace Document.Web.Pages
+@genCode();
+@code {
+    private string genCode()
+    {
+        var html = @"
+namespace My {
+    export class PopupComponent {
+        public readonly ID_POPUP: string = ""id_popup"";
+        public readonly ID_POPUP_GRID: string = ""id_popup_grid"";
+        public $popup: PopupBuilder;
+
+        constructor() {
+            const div = document.createElement(""div"");
+            div.id = this.ID_POPUP;
+            document.body.appendChild(div);
+
+            this.$popup = new PopupBuilder(this.ID_POPUP);
+            this.onInit();
+            this.bindingEvents();
+        }
+
+        public onInit(): void {
+            this.createPopup();
+        }
+
+        public bindingEvents(): void {
+        }
+
+        public createPopup(): void {
+            this.$popup.createPopup(option => {
+                option.title(""..."")
+                    .width(""800"")
+                    .height(""600"")
+                    .visible(false)
+                    .showCloseButton(true)
+                    .hideOnOutsideClick(false)
+                    .contentTemplate(contentElement => {
+                        const option = this.createGrid();
+                        contentElement.dxDataGrid(option.build());
+                    });
+            });
+        }
+
+        public showPopup(): void {
+            this.$popup.build().instance().show();
+        }
+
+        public hidePopup(): void {
+            this.$popup.build().instance().hide();
+        }
+
+        private createGrid(): DataGridOptionBuilder<...> {
+            const gridOptions = new DataGridOptionBuilder<...>();
+
+            gridOptions
+                .id(this.ID_POPUP_GRID)
+                .showBorders(true)
+                .height(""100%"")
+                .columns(columns => {
+                    // Define columns here
+                })
+                .dataSource(option => {
+                    option.addMvc(""..."", ""...."", null, ""POST"");
+                });
+
+            return gridOptions;
+        }
+    }
+}";
+        return html;
+    }
+}

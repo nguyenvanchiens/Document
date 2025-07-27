@@ -1,0 +1,11 @@
+﻿<div class="content-item">
+    <span class="content-title">@Title</span>
+    <div class="content-body">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

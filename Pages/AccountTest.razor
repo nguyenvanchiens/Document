@@ -1,0 +1,118 @@
+﻿@page "/account-test"
+@inherits BaseComponent
+@inject IJSRuntime JS
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="header"><h2>Những tài khoản test</h2></div>
+                <div class="content">
+                    <div class="content-item">
+                        <span class="content-title">Tài khoản test HNC</span>
+                        <div class="content-body">
+                            <pre>
+                            <code class="language-text">
+    Issue date: 01-13
+    OTP: 123456
+
+    Nội địa
+    https://mtf.onepay.vn/developer/?page=modul_noidia
+    Thẻ ABB:
+    Số thẻ: 9704250000000001
+    Tháng/Năm phát hành: 01/13
+    Tên: NGUYEN VAN A
+    Mã OTP: 123456
+
+    Visa
+    https://mtf.onepay.vn/developer/?page=modul_quocte
+    Thông tin thẻ test:
+    Loại tài khoản: Visa
+    Số thẻ: 4000000000000002 or 5313581000123430
+    Date Exp: 05/21
+    CVV/CSC: 123
+    Street: Tran Quang Khai
+    City/Town: Hanoi
+    State/Province: North
+    Postcode(zip code): 1234
+    Country: VietNam
+
+
+    Master: 5473500160001018
+    Visa: 4440000009900010
+    Amex: 340000099900036
+    Ngày hết hạn: 05/24
+    Mã csc: 123
+
+
+    Visa ONEPAY
+    https://mtf.onepay.vn/developer/?page=modul_quocte
+    Thông tin thẻ test:
+    Loại tài khoản: Visa
+    Số thẻ: 4000000000000002 or 5313581000123430
+    Date Exp: 05/21
+    CVV/CSC: 123
+    Street: Tran Quang Khai
+    City/Town: Hanoi
+    State/Province: North
+    Postcode(zip code): 1234
+    Country: VietNam
+
+    Thẻ ABB ONEPAY:
+    Số thẻ: 9704250000000001
+    Tháng/Năm phát hành: 01/13
+    Tên: NGUYEN VAN A
+    Mã OTP: 123456
+
+    VPBank ONEPAY
+    Số thẻ: 4000000000000002 or 5313581000123430
+    Date Exp: 05/21
+    CVV/CSC: 123
+
+    VNPAY
+    Ngân hàng: NCB
+    Số thẻ: 9704198526191432198
+    Tên chủ thẻ:NGUYEN VAN A
+    Ngày phát hành:07/15
+    Mật khẩu OTP:123456
+    Thành công
+
+    Thẻ ABB:
+    Số thẻ: 9704250000000001
+    Tháng/Năm phát hành: 01/13
+    Tên: NGUYEN VAN A
+    Mã OTP: 123456
+                                </code>
+                            </pre>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <span class="content-title">Tài khoản test thanh toán IgaSupermarket</span>
+                        <div class="content-body">
+                            <pre>
+                            <code>
+Tài khoản test thanh toán paypal:
+email: sb-t5zrt33716027@personal.example.com
+pass: 8mdLcSP$
+Tài khoản nhận tiền paypal test:
+email: sb-vq47l4733718088@business.example.com
+pass: CG&lt;0UkNv
+Địa chỉ đăng nhập tài khoản nhận tiền:
+https://www.sandbox.paypal.com/
+                            </code>
+                        </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("hljs.highlightAll");
+        }
+    }
+}

@@ -1,0 +1,95 @@
+﻿@namespace Document.Web.Pages
+      
+@genData()
+@code {
+    private string genData()
+    {
+        var html = @"
+namespace My {
+    export class PopupFormComponent {
+        public readonly ID_POPUP_FORM: string = ""ID_POPUP_FORM"";
+        public $popupForm: PopupBuilder;
+        public readonly FORM_UPDATE = ""FORM_UPDATE"";
+
+        constructor() {
+            const div = document.createElement(""div"");
+            div.id = this.ID_POPUP_FORM;
+            document.body.appendChild(div);
+
+            this.$popupForm = new PopupBuilder(this.ID_POPUP_FORM);
+            this.onInit();
+            this.bindingEvents();
+        }
+
+        public onInit(): void {
+            this.createPopup();
+        }
+
+        public bindingEvents(): void {
+        }
+
+        public createPopup(): void {
+            this.$popupForm.createPopup(option => {
+                option.title(""..."")
+                    .width(""800"")
+                    .height(""600"")
+                    .visible(false)
+                    .showCloseButton(true)
+                    .hideOnOutsideClick(false)
+                    .contentTemplate(contentElement => {
+                        var builderForm = this.createFormUpdateProvice();
+                        contentElement.dxForm(builderForm.build());
+                    });
+            });
+
+            this.showPopup();
+        }
+
+        private createFormUpdate(): FormOptionBuilder<...> {
+            const builder = new FormOptionBuilder<...>();
+            builder.id(this.FORM_UPDATE)
+                .labelLocation(""left"")
+                .items(item => {
+                    // add form fields here
+                });
+            return builder;
+        }
+
+        private async submitUpdateForm(): Promise<void> {
+            const form = $(`#${this.FORM_UPDATE}`).dxForm(""instance"");
+
+            if (form.validate().isValid) {
+                const formData = form.option(""formData"") as ...;
+                const result = await this.$service.SyncDataViettelPost(formData);
+
+                if (result.IsOk()) {
+                    this.hidePopup();
+                    onShowToastSuccess(
+                        Utils.l(LanguageKey.ViettelPostMapping.Message.SyncDataSuccess),
+                        Utils.l(LanguageKey.Notification.TitleInfo),
+                        3000
+                    );
+                    this.renderTable();
+                } else {
+                    onShowToastError(
+                        result.Message,
+                        Utils.l(LanguageKey.Notification.TitleInfo),
+                        3000
+                    );
+                }
+            }
+        }
+
+        public showPopup(): void {
+            this.$popupForm.build().instance().show();
+        }
+
+        public hidePopup(): void {
+            this.$popupForm.build().instance().hide();
+        }
+    }
+}
+";
+        return html;
+    }
+}

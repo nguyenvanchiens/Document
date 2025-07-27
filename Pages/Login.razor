@@ -3,6 +3,8 @@
 @inherits ComponentBase
 @attribute [AllowAnonymous]
 @inject NavigationManager Navigation
+@inject AccountService AccountService
+
 @inject CustomAuthStateProvider AuthProvider
 @layout MainLayout
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -14,17 +16,24 @@
                     <div class="card mb-0">
                         <div class="card-body">
                             <form>
+                                @if (ErrorMessage.IsNotEmpty())
+                                {
+                                    <div class="alert alert-danger text-center" role="alert">
+                                        @ErrorMessage
+                                    </div>
+                                }
+                                <h2></h2>
                                 <div class="mb-3">
                                     <label for="exampleInputEmail1" class="form-label">Username</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                    <input type="email" class="form-control" @bind="@Username" id="exampleInputEmail1" aria-describedby="emailHelp">
                                 </div>
                                 <div class="mb-4">
                                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1">
+                                    <input type="password" @bind="@Password" class="form-control" id="exampleInputPassword1">
                                 </div>
                                 <div class="d-flex align-items-center justify-content-between mb-4">
                                     <div class="form-check">
-                                        <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
+                                        <input @bind="@RememberMe" class="form-check-input primary" type="checkbox" id="flexCheckChecked">
                                         <label class="form-check-label text-dark" for="flexCheckChecked">
                                             Remeber this Device
                                         </label>
@@ -43,25 +52,23 @@
         </div>
     </div>
 </div>
-@code{
+@code {
     string Username = "";
     string Password = "";
+    bool RememberMe;
     string ErrorMessage = "";
 
     async Task LoginCustom()
     {
-        // var result = await UserService.LoginAsync(Username, Password);
-        // if (result != null)
-        // {
-        //     await AuthProvider.MarkUserAsAuthenticated(result.Value.AccessToken, result.Value.RefreshToken);
-        //     Navigation.NavigateTo("/");
-        // }
-        // else
-        // {
-        //     ErrorMessage = "Sai tên đăng nhập hoặc mật khẩu";
-        // }
-
-        await AuthProvider.MarkUserAsAuthenticated("12312312312", "123123123");
-        Navigation.NavigateTo("/");
+        var result = await AccountService.LoginAsync(Username, Password, RememberMe);
+        if (result.IsSuccess)
+        {
+            await AuthProvider.MarkUserAsAuthenticated(result.Data.AccessToken, result.Data.RefreshToken);
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            ErrorMessage = "Sai tên đăng nhập hoặc mật khẩu";
+        }
     }
 }

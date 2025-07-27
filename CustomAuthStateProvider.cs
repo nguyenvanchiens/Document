@@ -54,17 +54,7 @@ namespace Document.Web
                 }
             }
 
-            //var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-            //return new AuthenticationState(new ClaimsPrincipal(identity));
-
-            var fakeClaims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, "admin"),
-        new Claim(ClaimTypes.Email, "admin@example.com"),
-        new Claim(ClaimTypes.Role, "Administrator")
-    };
-
-            var identity = new ClaimsIdentity(fakeClaims, "fake");
+            var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
@@ -73,18 +63,7 @@ namespace Document.Web
             await _localStorage.SetItemAsync("authToken", token);
             await _localStorage.SetItemAsync("refreshToken", refreshToken);
 
-            //var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-            //var user = new ClaimsPrincipal(identity);
-
-
-            var fakeClaims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, "admin"),
-        new Claim(ClaimTypes.Email, "admin@example.com"),
-        new Claim(ClaimTypes.Role, "Administrator")
-    };
-
-            var identity = new ClaimsIdentity(fakeClaims, "fake");
+            var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
             var user = new ClaimsPrincipal(identity);
 
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
@@ -122,17 +101,52 @@ namespace Document.Web
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
-            var claims = new List<Claim>();
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonBytes);
 
-            if (keyValuePairs != null)
+            var claims = new List<Claim>();
+
+            // Parse roles
+            if (keyValuePairs.TryGetValue(ClaimTypes.Role, out var roles))
             {
-                foreach (var kvp in keyValuePairs)
+                if (roles.ValueKind == JsonValueKind.Array)
                 {
-                    claims.Add(new Claim(kvp.Key, kvp.Value.ToString()!));
+                    foreach (var role in roles.EnumerateArray())
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role.GetString()));
+                    }
                 }
+                else
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, roles.GetString()));
+                }
+
+                keyValuePairs.Remove(ClaimTypes.Role);
+            }
+
+            // Parse permissions
+            if (keyValuePairs.TryGetValue("permission", out var permissions))
+            {
+                if (permissions.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var perm in permissions.EnumerateArray())
+                    {
+                        claims.Add(new Claim("permission", perm.GetString()));
+                    }
+                }
+                else
+                {
+                    claims.Add(new Claim("permission", permissions.GetString()));
+                }
+
+                keyValuePairs.Remove("permission");
+            }
+
+            // Parse remaining claims
+            foreach (var kvp in keyValuePairs)
+            {
+                claims.Add(new Claim(kvp.Key, kvp.Value.ToString()));
             }
 
             return claims;

@@ -1,5 +1,7 @@
 using Blazored.LocalStorage;
+using Document.ApiClient;
 using Document.Web;
+using Document.Web.Service;
 using Fluxor;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,19 +17,21 @@ builder.Services.AddFluxor(options =>
     );
 });
 
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://chiennv.runasp.net/") });
 
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
+
+
 
 builder.Services.AddScoped<CustomAuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<CustomAuthStateProvider>());
 
 builder.Services.AddScoped<UserWebService>();
-
-
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
-
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped<AccountApiClient>();
+builder.Services.AddScoped<AccountService>();
 
 await builder.Build().RunAsync();

@@ -1,5 +1,87 @@
 ﻿@page "/GenCodeV3"
 @inherits BaseComponent
+@attribute [RequirePermission("view1")]
+@inject IJSRuntime JS
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body" style="min-height:80vh">
+                <div class="header"><h2>Tool hỗ trợ cải tiến nhanh trong V3</h2></div>
+                <div class="content">
+                    <div class="content-item">
+                        <div class="content-title d-flex align-items-center gap-2 mt-3">
+                            <select class="form-select w-auto" @bind="selected">
+                                <option value="" selected>Default value select</option>
+                                @foreach (var item in listHelper)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="content-body mt-3">
+                            @if (selected == "1")
+                            {
+                                <pre>
+                                <code class="typescript">
+                                <QuickPopupForm></QuickPopupForm>
+                                        </code>
+                                    </pre>
+                            }
+                            @if (selected == "2")
+                            {
+                                <pre>
+                                    <code class="typescript">
+                                        <QuickPopupGrid></QuickPopupGrid>
+                                    </code>
+                                </pre>
+                            }
+                            @if (selected == "3")
+                            {
+                                <div class="input-group w-auto mt-3 mb-3 gap-1">
+                                    <input type="text" class="form-control" placeholder="Nhập tên service" @bind="serviceName" />
+                                    <input type="text" class="form-control" placeholder="Nhập module" @bind="groupName" />
+                                    <button class="btn btn-primary" type="button" @onclick="GenCodeServiceV3">Gen code</button>
+                                </div>
+                                if (serviceName.IsNotEmpty() && groupName.IsNotEmpty() && isShowGenCode)
+                                {
+                                    <pre>
+                                    <code class="typescript">
+                                            <QuickServiceV3 ClassName="@serviceName" GroupName="@groupName"></QuickServiceV3>
+                                        </code>
+                                    </pre>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @code {
+    private List<ValueTextModHelper> listHelper = new List<ValueTextModHelper>()
+    {
+        new ValueTextModHelper("1","Gen Popup Form"),
+        new ValueTextModHelper("2","Xây dựng popup grid nhanh"),
+        new ValueTextModHelper("3","Khởi tạo nhanh Service V3"),
+    };
 
+    private string selected = "";
+    private string? lastSelected;
+
+    #region Xử lý phần gen code service
+    private string serviceName = "";
+    private string groupName = "";
+    private bool isShowGenCode = false;
+    #endregion
+
+    private void GenCodeServiceV3()
+    {
+        isShowGenCode = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("hljs.highlightAll");
+    }
 }

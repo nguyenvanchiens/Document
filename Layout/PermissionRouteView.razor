@@ -1,0 +1,66 @@
+﻿@using System.Reflection
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter] public RouteData RouteData { get; set; } = default!;
+    [Parameter] public Type? DefaultLayout { get; set; }
+
+    private bool IsAllowed = false;
+    private bool CheckedPermission = false;
+    private RenderFragment? RenderedPage;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var pageType = RouteData.PageType;
+        var permissionAttr = pageType.GetCustomAttribute<RequirePermissionAttribute>();
+
+        if (permissionAttr == null)
+        {
+            IsAllowed = true;
+            CheckedPermission = true;
+        }
+        else
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                var requiredPermission = permissionAttr.Permission;
+                var hasPermission = user.Claims
+                    .Where(c => c.Type == "permission")
+                    .Select(c => c.Value)
+                    .Contains(requiredPermission);
+
+                IsAllowed = hasPermission;
+            }
+
+            CheckedPermission = true;
+        }
+
+        // Cập nhật render khi thay đổi
+        RenderedPage = BuildRenderTree();
+    }
+
+    private RenderFragment BuildRenderTree() => builder =>
+    {
+        if (!CheckedPermission)
+            return;
+
+        if (IsAllowed)
+        {
+            builder.OpenComponent(0, typeof(RouteView));
+            builder.AddAttribute(1, "RouteData", RouteData);
+            builder.AddAttribute(2, "DefaultLayout", DefaultLayout); // giữ layout
+            builder.CloseComponent();
+        }
+        else
+        {
+            builder.OpenComponent(3, typeof(RedirectToLogin));
+            builder.CloseComponent();
+        }
+    };
+}
+
+@RenderedPage

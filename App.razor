@@ -1,14 +1,7 @@
 ﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(AdminLayout)">
-                <NotAuthorized>
-                    <RedirectToLogin />
-                </NotAuthorized>
-                <Authorizing>
-                    <p>Đang kiểm tra đăng nhập...</p>
-                </Authorizing>
-            </AuthorizeRouteView>
+            <PermissionRouteView RouteData="@routeData" DefaultLayout="@typeof(AdminLayout)" />
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
